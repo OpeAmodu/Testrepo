@@ -1,0 +1,50 @@
+
+
+setwd("C:/Users/Opeye/OneDrive/Desktop/INFO 550")
+#
+#libraries
+library(tidyverse)
+library(psych)
+library(gridExtra)
+library(knitr)
+
+#assigning name to data set
+health_expense <- read.csv("health_insurance.csv")
+str(health_expense)
+
+### Exploratory Data Analysis
+summary(health_expense)
+
+#Plotting the distribution of expenses
+ggplot(health_expense)+
+  geom_histogram(aes(x = expenses), bins = 30, fill = "green", color = "green")+
+  geom_vline(aes(xintercept =median(expenses)), color = "blue")+
+  labs(title = "Distribution of Health Care Expenses Nationally", x = "Expenses in U.S dollars",
+       y ="Number of People")+
+  geom_text(aes(x = median (expenses), y = 150, label = "median"), 
+            color = "blue", 
+            size = 4, 
+            alpha = 0.7, 
+            angle = 45)+
+  scale_x_continuous(n.breaks = 13)
+
+## Distribution of health Expenses by Region
+health_expense_by_region <- health_expense %>%
+  group_by(region)%>%
+  summarize(`mean(in US dollars)` = mean(expenses), 
+            `median(in US dollars)` = median(expenses), 
+            n = n()) #this creates a table of mean and median by region
+
+#comparing the distribution of health expenses by region  
+ggplot(health_expense)+
+  geom_histogram(aes(x = expenses, color = region, fill = region), bins = 30)+
+  labs(title = "Distribution of Health Care Expenses by Region", x = "Expenses in U.S dollars", y ="Number of People")+
+  facet_wrap(vars(region))
+
+ggplot(health_expense)+
+  geom_freqpoly(aes(x = expenses, color = region), bins = 30)+
+  labs(title = "Distribution of Health Care Expenses by Region", x = "Expenses in U.S dollars", y ="Number of People")
+
+## Correlation between Other Variables and Expenses
+cor(health_expense[c("age","bmi", "children", "expenses")]) #correlation matrix
+pairs.panels(health_expense[c("age","bmi","children","expenses")]) #visualizing correlation matrix

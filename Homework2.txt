@@ -1,3 +1,5 @@
+# Thanks for the edit
+
 #Andrea's comment
 
 setwd("C:/Users/Opeye/OneDrive/Desktop/INFO 550")
